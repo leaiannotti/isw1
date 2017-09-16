@@ -139,10 +139,47 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: ''
+	instanceVariableNames: 'items'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:01:37'!
+initialize
+
+	items := OrderedCollection new.! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 16:30:56'!
+isEmpty
+	^ items isEmpty! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:02:26'!
+items
+	^items! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 16:30:38'!
+items: aCollectionOfItems
+
+	items := aCollectionOfItems ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/16/2017 12:43:50'!
+pop
+
+	self isEmpty not ifTrue:[|lastitem| lastitem := items at: (items size). items removeLast. ^lastitem].
+	^ Error signal: OOStack  stackEmptyErrorDescription ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:02:09'!
+push: anObject 
+	self items add:anObject ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:17:25'!
+size
+	^items size! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/16/2017 12:45:08'!
+top
+	self isEmpty not ifTrue:[ ^ items at:1].
+	^ Error signal: OOStack stackEmptyErrorDescription ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
