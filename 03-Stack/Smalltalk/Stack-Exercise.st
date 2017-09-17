@@ -144,14 +144,15 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:01:37'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:19:54'!
 initialize
 
-	items := OrderedCollection new.! !
+	items := OrderedCollection new.
+	items addFirst: BaseElement new.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 16:30:56'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:20:12'!
 isEmpty
-	^ items isEmpty! !
+	^ items first isBaseElement! !
 
 !OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:02:26'!
 items
@@ -162,24 +163,41 @@ items: aCollectionOfItems
 
 	items := aCollectionOfItems ! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/16/2017 12:43:50'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:20:41'!
 pop
 
-	self isEmpty not ifTrue:[|lastitem| lastitem := items at: (items size). items removeLast. ^lastitem].
-	^ Error signal: OOStack  stackEmptyErrorDescription ! !
+	^items first popFromContainer:self! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:02:09'!
-push: anObject 
-	self items add:anObject ! !
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:21:32'!
+popBaseElement
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/15/2017 17:17:25'!
+	^Error signal: OOStack stackEmptyErrorDescription ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:22:13'!
+popNonBaseElement: aNonBaseElement
+
+	items removeFirst.
+	^aNonBaseElement ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:23:10'!
+push: anElement
+	items addFirst: (NonBaseElement asElement:anElement)! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:23:37'!
 size
-	^items size! !
+	^items size - 1! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/16/2017 12:45:08'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:23:57'!
 top
-	self isEmpty not ifTrue:[ ^ items at:1].
+	^ items first topFromContainer:self! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:25:10'!
+topWIthBaseElement
 	^ Error signal: OOStack stackEmptyErrorDescription ! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:25:56'!
+topWIthNonBaseElement: aNonStackElement
+	^ aNonStackElement ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -191,3 +209,86 @@ OOStack class
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
+
+
+!classDefinition: #StackElement category: #'Stack-Exercise'!
+Object subclass: #StackElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StackElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:16:27'!
+isBaseElement 
+	self subclassResponsibility ! !
+
+!StackElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:17:12'!
+popFromContainer: aContainer 
+	self subclassResponsibility ! !
+
+!StackElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:17:17'!
+topFromContainer: aContainer 
+	self subclassResponsibility ! !
+
+
+!classDefinition: #BaseElement category: #'Stack-Exercise'!
+StackElement subclass: #BaseElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!BaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:17:53'!
+isBaseElement
+	^true! !
+
+!BaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:26:59'!
+popFromContainer: aContainer
+^aContainer popBaseElement ! !
+
+!BaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:27:19'!
+topFromContainer: aContainer
+^aContainer topWIthBaseElement ! !
+
+
+!classDefinition: #NonBaseElement category: #'Stack-Exercise'!
+StackElement subclass: #NonBaseElement
+	instanceVariableNames: 'stackElement'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!NonBaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:27:33'!
+isBaseElement
+^false! !
+
+!NonBaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:28:34'!
+nonStackElement
+^	stackElement ! !
+
+!NonBaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:29:18'!
+popFromContainer: aContainer
+	^aContainer popNonBaseElement: stackElement ! !
+
+!NonBaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:30:01'!
+topFromContainer: aContainer
+	^aContainer topWIthNonBaseElement: stackElement ! !
+
+!NonBaseElement methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:30:29'!
+withElement: aStackElement
+^ stackElement  := aStackElement ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NonBaseElement class' category: #'Stack-Exercise'!
+NonBaseElement class
+	instanceVariableNames: ''!
+
+!NonBaseElement class methodsFor: 'as yet unclassified' stamp: 'LI 9/17/2017 13:32:41'!
+asElement: anElement
+	
+	|aNonBaseElement|
+	aNonBaseElement := self new.
+	aNonBaseElement withElement: anElement.
+	^aNonBaseElement 
+	! !
